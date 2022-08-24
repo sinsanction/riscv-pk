@@ -6,6 +6,7 @@
 #include "elf.h"
 #include "mtrap.h"
 #include "frontend.h"
+#include "flush_icache.h"
 #include <stdbool.h>
 
 elf_info current;
@@ -160,7 +161,8 @@ static void run_loaded_program(size_t argc, char** argv, uintptr_t kstack_top)
 
   trapframe_t tf;
   init_tf(&tf, current.entry, stack_top);
-  __clear_cache(0, 0);
+  //__clear_cache(0, 0);
+  __riscv_flush_icache();
   write_csr(sscratch, kstack_top);
   start_user(&tf);
 }
